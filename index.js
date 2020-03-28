@@ -1,11 +1,15 @@
-const TMDB = require('./utils/tmdb')
+const dd = (val) => console.log(val)
 
-exports = module.exports = (options) => {
-    const { apiKey } = options
-    
-    const mtdb = new TMDB({
+const tmdb = require('./utils/tmdb')({
+    apiKey: 'c729bbc07bb8542dd22c1d740f0c5bf5'
+})
 
-    })
+const main = async () => {
+    const data  = await tmdb.shows().search('the simpsons').first()
+    // const data  = await tmdb.shows().getById('456')
+    // let seasonIds = data.seasons.map(el => el.season_number)
+    // dd(seasonIds)
+    dd(data)
 }
 
-exports.TMDB = TMDB
+main()
