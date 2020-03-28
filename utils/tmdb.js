@@ -91,3 +91,4 @@ class TMDB {
     }
 }
 
+module.exports = TMDB
