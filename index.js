@@ -5,11 +5,8 @@ const tmdb = require('./utils/tmdb')({
 })
 
 const main = async () => {
-    const data  = await tmdb.shows().search('the simpsons').first()
-    // const data  = await tmdb.shows().getById('456')
-    // let seasonIds = data.seasons.map(el => el.season_number)
-    // dd(seasonIds)
-    dd(data)
+    const fullShow = await tmdb.shows().search('lilo and stitch', {year: 2005})
+    dd(fullShow)
 }
 
 main()

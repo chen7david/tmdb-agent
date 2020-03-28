@@ -21,7 +21,8 @@ class TMDB {
         this.http = http(config)
         this.apiKey = apiKey
         this.queryType = null
-        this.results = null
+        this.results = []
+        this.queue = null
     }
 
     shows(){
@@ -31,17 +32,22 @@ class TMDB {
     movies(){
         this.queryType = env.movieType
         return this
-    }
+    } 
 
-    async search(keyword, config = {}){
-        const { year } = config
+    async search(keyword, options = {}){
+        
+        const { year } = options
         if(!this.queryType) throw('please specify your queryType')
         let url = 'search/'.concat(this.queryType, '?api_key=', this.apiKey, '&query=', keyword)
         if(year) url = url.concat('&year=', year)
         const { data } = await this.http.get(url)
-        this.queryType = null
-        this.results = data
-        return this
+        return data
+    }
+
+    async find(keyword, options = {}){
+        const { results, total_results }  = await this.search(keyword, options)
+        const match = total_results > 0 ? results[0] : null
+        return match 
     }
 
     async getById(id){
@@ -49,6 +55,17 @@ class TMDB {
         const url = '/'.concat(this.queryType,'/', id, '?api_key=', this.apiKey)
         const { data } = await this.http.get(url)
         return data
+    }
+
+    async loadShow(keyword, options = {}){
+        const { results, total_results }  = await this.shows().search(keyword, options)
+        const match = total_results > 0 ? results[0] : null
+        if(!match) return null
+        const show = await this.shows().getById(match.id)
+        if(!show) return null
+        const seasonNumbers = show.seasons.map(el => el.season_number)
+        const fullShow = await this.getSeasons(match.id, seasonNumbers)
+        return fullShow
     }
 
     async getSeasons(showId, seasonNumbers = []){
