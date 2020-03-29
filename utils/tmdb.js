@@ -82,6 +82,7 @@ class TMDB {
                 const season = data['season/'+i]
                 episodes = episodes.concat(season.episodes)
                 seasons.push(season)
+                delete data['season/'+i]
             }
         }
         show.seasons = seasons
