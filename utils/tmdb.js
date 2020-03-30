@@ -57,14 +57,20 @@ class TMDB {
         return data
     }
 
-    async load(keyword, options = {}){
-        const { results, total_results }  = await this.shows().search(keyword, options)
-        const match = total_results > 0 ? results[0] : null
-        if(!match) return null
-        const show = await this.shows().getById(match.id)
+    async load(options = {}){
+        let { keyphrase, id } = options
+        if(!keyphrase && !id) throw('either keyphrase of id required')
+        if(!id){
+            const { results, total_results }  = await this.shows().search(keyphrase, options)
+            const match = total_results > 0 ? results[0] : null
+            if(!match) return null
+            id = match.id
+        }
+        
+        const show = await this.shows().getById(id)
         if(!show) return null
         const seasonNumbers = show.seasons.map(el => el.season_number)
-        const fullShow = await this.getSeasons(match.id, seasonNumbers)
+        const fullShow = await this.getSeasons(id, seasonNumbers)
         return fullShow
     }
 
