@@ -57,7 +57,7 @@ class TMDB {
         return data
     }
 
-    async loadShow(keyword, options = {}){
+    async load(keyword, options = {}){
         const { results, total_results }  = await this.shows().search(keyword, options)
         const match = total_results > 0 ? results[0] : null
         if(!match) return null
@@ -82,6 +82,7 @@ class TMDB {
                 const season = data['season/'+i]
                 episodes = episodes.concat(season.episodes)
                 seasons.push(season)
+                delete data['season/'+i]
             }
         }
         show.seasons = seasons
