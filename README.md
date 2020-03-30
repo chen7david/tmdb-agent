@@ -15,13 +15,3 @@ const someAsyncFunction = async () => {
     const tvshowWithSeasonsAndEpisodes = await tmdb.loadShow('some-show-name')
 }
 ```
-
-###End Points
-```js
-const url = '/movies?keyphrase=some-movie-name' /* returns an array of matches movies */
-const url = '/movie?id=1419' /* returns an a single movie match */
-
-
-const url = '/shows?keyphrase=some-show-name' /* returns an a single show match */
-const url = '/show?id=1419' /* returns an a single show match */
-```
