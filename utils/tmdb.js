@@ -25,6 +25,7 @@ class TMDB {
         this.queue = null
     }
 
+    
     shows(){
         this.queryType = env.showType
         return this
@@ -32,13 +33,13 @@ class TMDB {
     movies(){
         this.queryType = env.movieType
         return this
-    } 
+    }
 
     async search(keyword, options = {}){
         
         const { year } = options
         if(!this.queryType) throw('please specify your queryType')
-        let url = 'search/'.concat(this.queryType, '?api_key=', this.apiKey, '&query=', keyword)
+        let url = '/search/'.concat(this.queryType, '?api_key=', this.apiKey, '&query=', keyword)
         if(year) url = url.concat('&year=', year)
         const { data } = await this.http.get(url)
         return data
