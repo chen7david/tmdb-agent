@@ -39,3 +39,7 @@ const show = await tmdb.shows().getById('some-show-id')
 ```js
 const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
 ```
+
+## Important URLs
+- baseURL : 'https://api.themoviedb.org/3/'
+- imageURL : 'http://image.tmdb.org/t/p/'
