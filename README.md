@@ -8,10 +8,30 @@ const tmdb = require('tmdb-agent')({
 
 const someAsyncFunction = async () => {
     const movies = await tmdb.movies().search('some-movie-name', /* optional a year parameter*/ )
-    const movie = await tmdb.movies().find('some-movie-name', /* optional a year parameter*/ )
-    const tvshows = await tmdb.shows().search('some-show-name')
-    const tvshow = await tmdb.shows().find('some-show-name')
-    const tvshow = await tmdb.shows().load('some-show-id')
-    const tvshowWithSeasonsAndEpisodes = await tmdb.loadShow('some-show-name')
+    const movie = await tmdb.movies().getById('some-movie-id')
+    const shows = await tmdb.shows().search('some-show-name')
+    const show = await tmdb.shows().getById('some-show-id')
+    const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
 }
+```
+
+
+```js
+const movies = await tmdb.movies().search('some-movie-name', /* optional a year parameter*/ )
+```
+
+```js
+const movie = await tmdb.movies().getById('some-movie-id')
+```
+
+```js
+const shows = await tmdb.shows().search('some-show-name')
+```
+
+```js
+const show = await tmdb.shows().getById('some-show-id')
+```
+
+```js
+const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
 ```
