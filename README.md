@@ -15,23 +15,27 @@ const someAsyncFunction = async () => {
 }
 ```
 
-
+### Search for movies by title
 ```js
 const movies = await tmdb.movies().search('some-movie-name', /* optional a year parameter*/ )
 ```
 
+### Search for movies by MTDB id
 ```js
 const movie = await tmdb.movies().getById('some-movie-id')
 ```
 
+### Search for show by title
 ```js
 const shows = await tmdb.shows().search('some-show-name')
 ```
 
+### Search for show by MTDB id
 ```js
 const show = await tmdb.shows().getById('some-show-id')
 ```
 
+### Search for show by MTDB id and load related season and episodes
 ```js
 const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
 ```
