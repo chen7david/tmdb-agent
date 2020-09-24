@@ -87,7 +87,4 @@ class TMDB {
     }
 }
 
-module.exports = (options) => {
-    if(!options.apiKey) throw('apiKey required!')
-    return new TMDB(options)
-}
+module.exports = TMDB
