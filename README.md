@@ -52,8 +52,8 @@ const url = 'http://some-url.com/file'
 
 const someAsyncFunc = async () => {
 
-        const res = await tmdb.download(path, url)
-        
+        const result = await tmdb.download(path, url)
+        /* result is true if succees and will throw an error if fialed */ 
 }
 
 someAsyncFunc()
