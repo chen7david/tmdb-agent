@@ -44,6 +44,23 @@ const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
 - baseURL : 'https://api.themoviedb.org/3/'
 - imageURL : 'http://image.tmdb.org/t/p/original/some-image-url'
 
+## download 
+
+```js
+const path = 'some-path/some-image-name.jpg'
+const url = 'http://some-url.com/file'
+
+const run = async () => {
+   try {
+        const res = await tmdb.download(path, url)
+   } catch (err) {
+       console.log(err)
+   }
+}
+
+run()
+```
+
 ## Important Image Sizes
 
 ```yaml

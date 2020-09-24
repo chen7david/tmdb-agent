@@ -1,4 +1,5 @@
 const http = require('./http')
+const fs = require('fs')
 
 class TMDB {
     constructor(options = {}){
@@ -68,6 +69,21 @@ class TMDB {
         let chunks = [], i = 0, n = array.length
         while (i < n) chunks.push(array.slice(i, i += chunk))
         return chunks
+    }
+
+    async download(dest, url){
+        try {
+            const { data } = await http.get(url, {responseType: 'stream'})
+            const file = fs.createWriteStream(dest)
+
+            return new Promise((resolve, reject) => {
+                file.on('error', (err) => reject(err))
+                data.pipe(file)
+                file.on('finish', () => resolve(true))
+            })
+        } catch (err) {
+            fs.unlink(dest, (err) => err ? err : false)
+        }
     }
 }
 
