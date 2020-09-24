@@ -50,15 +50,11 @@ const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
 const path = 'some-path/some-image-name.jpg'
 const url = 'http://some-url.com/file'
 
-const run = async () => {
-   try {
+const someAsyncFunc = async () => {
         const res = await tmdb.download(path, url)
-   } catch (err) {
-       console.log(err)
-   }
 }
 
-run()
+someAsyncFunc()
 ```
 
 ## Important Image Sizes
