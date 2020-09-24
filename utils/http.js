@@ -1,34 +1,19 @@
-const axios = require('axios')
+const config  = require('./../config')
+const http = require('axios').create(config.http)
 
-exports = module.exports = (options) => {
+http.interceptors.request.use(config => {
+    config.url = encodeURI(config.url)
+    return config
+}, error =>{
+    console.log({'@request-error': error})
+    return Promise.reject(error)
+})
 
-    const { baseURL, headers, timeout } = options
-    if(!baseURL) throw(`baseURL is required`)
-    const config = { baseURL }
-    if(headers) config.headers = headers
-    if(timeout) config.timeout = timeout
-    const http = axios.create(config)
+http.interceptors.response.use(response => {
+    return response
+}, error =>{
+    console.log({'@response-error': error.response})
+    return Promise.reject(error)
+})
 
-    // INTERCEPTORS 
-    http.interceptors.request.use(config => {
-        config.url = encodeURI(config.url)
-        console.log({url:config.url})
-        return config
-    }, error =>{
-        console.log({'@req-error': error})
-        return Promise.reject(error)
-    })
-
-    http.interceptors.response.use(response => {
-        // console.log(response.data)
-        return response
-    }, error =>{
-        console.log({'@req-error': error.response})
-        return Promise.reject(error)
-    })
-
-    return http
-}
-
-
-exports.axios = axios
+module.exports = http

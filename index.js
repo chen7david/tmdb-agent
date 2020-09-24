@@ -1,6 +1,2 @@
-const TMDB = require('./utils/tmdb')
-const axios = require('axios')
+module.exports = require('./utils/tmdb')
 
-exports = module.exports = (options) => new TMDB(options)
-exports.TMDB = TMDB
-exports.axios = axios

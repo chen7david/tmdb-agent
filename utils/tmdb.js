@@ -1,90 +1,57 @@
-const env = require('./../config')
 const http = require('./http')
-const { chunk } = require('./functions')
 
 class TMDB {
-
-    constructor(options){
-
-        const { apiKey, baseURL, timeout } = options
-
-        if(!apiKey) throw(`apiKey is required`)
-
-        const config = {
-            baseURL: env.baseURL,
-            timeout: env.timeout,
-        }
-
-        if(baseURL) config.baseURL = baseURL
-        if(timeout) config.timeout = timeout
-
-        this.http = http(config)
-        this.apiKey = apiKey
-        this.queryType = null
-        this.results = []
-        this.queue = null
+    constructor(options = {}){
+        this.apiKey = options.apiKey
+        this.queryType = ''
+        this.eagerState = false
+        this.result = null
     }
 
-    
-    shows(){
-        this.queryType = env.showType
-        return this
-    }
     movies(){
-        this.queryType = env.movieType
+        this.queryType = 'movie'
         return this
     }
 
-    async search(keyword, options = {}){
-        
-        const { year } = options
-        if(!this.queryType) throw('please specify your queryType')
-        let url = '/search/'.concat(this.queryType, '?api_key=', this.apiKey, '&query=', keyword)
-        if(year) url = url.concat('&year=', year)
-        const { data } = await this.http.get(url)
-        return data
+    shows(){
+        this.queryType = 'tv'
+        return this
     }
 
-    async find(keyword, options = {}){
-        const { results, total_results }  = await this.search(keyword, options)
-        const match = total_results > 0 ? results[0] : null
-        return match 
+    eager(){
+        this.eagerState = true
+        return this
+    }
+
+    async search(keyphrase, options = {}){
+        const { year } = options
+        if(!this.queryType) throw('search can not be called directly!')
+        let url = '/search/'.concat(this.queryType, '?api_key=', this.apiKey, '&query=', keyphrase)
+        if(year) url = url.concat('&year=', year)
+        const { data } = await http.get(url)
+        return data.total_results > 0 ? data.results : []
     }
 
     async getById(id){
-        if(id == null) return null
+        if(id == null) throw(`id is required but ${id} was given!`)
         const url = '/'.concat(this.queryType,'/', id, '?api_key=', this.apiKey)
-        const { data } = await this.http.get(url)
+        const { data } = await http.get(url)
+        if(this.eagerState && data && data.seasons) {
+            await this.load(data)
+            this.eagerState = false
+        }
         return data
     }
 
-    async load(options = {}){
-        let { keyphrase, id } = options
-        if(!keyphrase && !id) throw('either keyphrase of id required')
-        if(!id){
-            const { results, total_results }  = await this.shows().search(keyphrase, options)
-            const match = total_results > 0 ? results[0] : null
-            if(!match) return null
-            id = match.id
-        }
-        
-        const show = await this.shows().getById(id)
-        if(!show) return null
-        const seasonNumbers = show.seasons.map(el => el.season_number)
-        const fullShow = await this.getSeasons(id, seasonNumbers)
-        return fullShow
-    }
+    async load(show){
+        const numbers = show.seasons.map(el => el.season_number)
+        const batches = this.chunk(numbers, 20)
+        let seasons = [], episodes = []
 
-    async getSeasons(showId, seasonNumbers = []){
-        const batches = chunk(seasonNumbers, 20)
-        let seasons = []
-        let episodes = []
-        let show = null
         for(let batch of batches){
-            let url = '/'.concat(this.queryType,'/', showId,'?api_key=', this.apiKey,'&append_to_response=')
+            let url = '/tv'.concat('/', show.id,'?api_key=', this.apiKey,'&append_to_response=')
             for(let i of batch){ url = url.concat('season','/', i,',') }
-            const { data } = await this.http.get(url)
-            show = data
+            const { data } = await http.get(url)
             for(let i of batch){
                 const season = data['season/'+i]
                 episodes = episodes.concat(season.episodes)
@@ -94,9 +61,17 @@ class TMDB {
         }
         show.seasons = seasons
         show.episodes = episodes
-
         return show
+    }
+
+    chunk(array, chunk){
+        let chunks = [], i = 0, n = array.length
+        while (i < n) chunks.push(array.slice(i, i += chunk))
+        return chunks
     }
 }
 
-module.exports = TMDB
+module.exports = (options) => {
+    if(!options.apiKey) throw('apiKey required!')
+    return new TMDB(options)
+}
