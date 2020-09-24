@@ -51,7 +51,9 @@ const path = 'some-path/some-image-name.jpg'
 const url = 'http://some-url.com/file'
 
 const someAsyncFunc = async () => {
+
         const res = await tmdb.download(path, url)
+        
 }
 
 someAsyncFunc()
