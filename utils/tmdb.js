@@ -1,5 +1,7 @@
 const http = require('./http')
 const fs = require('fs')
+const path = require('path')
+const { sizes, imageURL }  = require('./../config')
 
 class TMDB {
     constructor(options = {}){
@@ -7,6 +9,7 @@ class TMDB {
         this.queryType = ''
         this.eagerState = false
         this.result = null
+        if(options.basePath) this.basePath = path.resolve(__dirname, '../../../', options.basePath)
     }
 
     movies(){
@@ -104,6 +107,53 @@ class TMDB {
             fs.unlink(dest, (err) => err ? err : false)
         }
     }
+
+    async savePoster(imgURL){
+        for(let size of sizes.poster){
+            await this.saveImgFile(size, imgURL)
+        }
+    }
+    
+    async saveBackdrop(imgURL){
+        for(let size of sizes.backdrop){
+            await this.saveImgFile(size, imgURL)
+        }
+    }
+
+    async saveStill(imgURL){
+        for(let size of sizes.still){
+            await this.saveImgFile(size, imgURL)
+        }
+    }
+
+    async saveLogo(imgURL){
+        for(let size of sizes.logo){
+            await this.saveImgFile(size, imgURL)
+        }
+    }
+
+    async saveProfile(imgURL){
+        for(let size of sizes.profile){
+            await this.saveImgFile(size, imgURL)
+        }
+    }
+
+    async saveImgFile(size, imgURL){
+        let url = imageURL.concat(size,imgURL)
+        let dest = path.join(this.basePath, size)
+        let filePath = path.join(this.basePath, size, imgURL)
+        this.mkdir(dest)
+        await this.download(filePath, url)
+    }
+
+    exist(path){
+        return fs.existsSync(path)
+    }
+
+    mkdir(path, config = { recursive: true }){
+        if(!this.exist(path)) fs.mkdirSync(path, config)
+    }
+
 }
 
 module.exports = TMDB
