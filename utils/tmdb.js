@@ -19,6 +19,26 @@ class TMDB {
         return this
     }
 
+    people(){
+        this.queryType = 'person'
+        return this
+    }
+
+    async genres(){
+        if(!this.queryType) throw('genres can not be called directly!')
+        let url = '/genre/'.concat(this.queryType,'/list?api_key=', this.apiKey, '&language=en-US')
+        const { data:{ genres } } = await http.get(url)
+        return genres
+    }
+
+    async trending(window = null){
+        if(!this.queryType) throw('trending can not be called directly!')
+        let url = '/trending/'.concat(this.queryType,'/', window == "week" ? "week" : "day",'?api_key=', this.apiKey)
+        console.log({url})
+        const { data } = await http.get(url)
+        return data.results.length > 0 ? data.results : []
+    }
+
     eager(){
         this.eagerState = true
         return this

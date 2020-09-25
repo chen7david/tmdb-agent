@@ -40,6 +40,20 @@ const show = await tmdb.shows().getById('some-show-id')
 const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
 ```
 
+
+### Get all valid genre for either shows or movies
+```js
+const allShowGenres = await tmdb.shows().genres()
+const allMovieGenres = await tmdb.movies().genres()
+```
+
+### Get all trending shows, movies or people
+```js
+const allTrendingShows = await tmdb.shows().trending('week')
+const allTrendingMovies = await tmdb.movies().trending()
+const allTrendingMovies = await tmdb.people().trending()
+```
+
 ## Important URLs
 - baseURL : 'https://api.themoviedb.org/3/'
 - imageURL : 'http://image.tmdb.org/t/p/original/some-image-url'
