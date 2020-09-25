@@ -34,7 +34,6 @@ class TMDB {
     async trending(window = null){
         if(!this.queryType) throw('trending can not be called directly!')
         let url = '/trending/'.concat(this.queryType,'/', window == "week" ? "week" : "day",'?api_key=', this.apiKey)
-        console.log({url})
         const { data } = await http.get(url)
         return data.results.length > 0 ? data.results : []
     }
