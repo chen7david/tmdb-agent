@@ -11,7 +11,8 @@ const someAsyncFunction = async () => {
     const movie = await tmdb.movies().getById('some-movie-id')
     const shows = await tmdb.shows().search('some-show-name')
     const show = await tmdb.shows().getById('some-show-id')
-    const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
+    const showSeasonsEpisodes = await tmdb.shows().seasons().getById('some-show-id')
+    const showSeasonsOneEpisodes = await tmdb.shows().seasons([1]).getById('some-show-id')
 }
 ```
 
@@ -37,9 +38,13 @@ const show = await tmdb.shows().getById('some-show-id')
 
 ### Search for show by MTDB id and load related season and episodes
 ```js
-const showSeasonsEpisodes = await tmdb.shows().eager().getById('some-show-id')
+const showSeasonsEpisodes = await tmdb.shows().seasons().getById('some-show-id')
 ```
 
+### Search for show by MTDB id and load a subset related season and episodes
+```js
+const showSeasonsEpisodes = await tmdb.shows().seasons([1, 20, 40]).getById('some-show-id')
+```
 
 ### Get all valid genre for either shows or movies
 ```js
