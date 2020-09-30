@@ -1,4 +1,3 @@
-const dd = (val) => console.log(val)
 const http = require('./http')
 
 class TMDB {
