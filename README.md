@@ -124,8 +124,8 @@ const allTrendingMovies = await tmdb
 ```
 
 ## Important URLs
-- baseURL : 'https://api.themoviedb.org/3/'
-- imageURL : 'http://image.tmdb.org/t/p/original/some-image-url'
+- baseURL : https://api.themoviedb.org/3/
+- imageURL : http://image.tmdb.org/t/p/original/some-image-url
 
 
 ## Important Image Sizes
