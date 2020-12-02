@@ -8,12 +8,36 @@ const tmdb = require('tmdb-agent')({
 })
 
 const someAsyncFunction = async () => {
-    const movies = await tmdb.movies().search('some-movie-name', /* optional a year parameter*/ ).get()
-    const movie = await tmdb.movies().withId('some-movie-id').get()
-    const shows = await tmdb.shows().search('some-show-name', /* optional a year parameter*/).get()
-    const show = await tmdb.shows().withId('some-show-id').get()
-    const showSeasonsEpisodes = await tmdb.shows().seasons().withId('some-show-id')
-    const showSeasonsOneEpisodes = await tmdb.shows().seasons([1]).withId('some-show-id')
+    
+    const movies = await tmdb
+        .movies()
+        .search('some-movie-name', /* optional a year parameter*/ )
+        .get()
+    
+    const movie = await tmdb
+        .movies()
+        .withId('some-movie-id')
+        .get()
+    
+    const shows = await tmdb
+        .shows()
+        .search('some-show-name', /* optional a year parameter*/
+        ).get()
+    
+    const show = await tmdb
+        .shows()
+        .withId('some-show-id')
+        .get()
+    
+    const showSeasonsEpisodes = await tmdb
+        .shows()
+        .seasons()
+        .withId('some-show-id')
+    
+    const showSeasonsOneEpisodes = await tmdb
+        .shows()
+        .seasons([1])
+        .withId('some-show-id')
 }
 ```
 
@@ -53,7 +77,8 @@ const show = await tmdb
 ```js
 const showSeasonsEpisodes = await tmdb
     .shows()
-    .seasons().withId('some-show-id')
+    .seasons()
+    .withId('some-show-id')
     .get()
 ```
 
@@ -68,10 +93,12 @@ const showSeasonsEpisodes = await tmdb
 
 ### Get all valid genre for either shows or movies
 ```js
+
 const allShowGenres = await tmdb
     .shows()
     .genres()
     .get()
+
 const allMovieGenres = await tmdb
     .movies()
     .genres()
@@ -80,14 +107,17 @@ const allMovieGenres = await tmdb
 
 ### Get all trending shows, movies or people
 ```js
+
 const allTrendingShows = await tmdb
     .shows()
     .trending('week')
     .get()
+
 const allTrendingMovies = await tmdb
     .movies()
     .trending()
     .get()
+
 const allTrendingMovies = await tmdb
     .people()
     .trending().get()
