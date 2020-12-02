@@ -148,7 +148,8 @@ const allTrendingMovies = await tmdb
 
 const allTrendingMovies = await tmdb
     .people()
-    .trending().get()
+    .trending()
+    .get()
 ```
 
 ## Important URLs
