@@ -46,6 +46,29 @@ const someAsyncFunction = async () => {
 const { koatmdb, TMDB } = require('tmdb-agent')
 ```
 
+### Use in Koajs
+```js
+const Koa = require('koa')
+const app = new Koa()
+const { koatmdb } = require('tmdb-agent')
+
+app.use(koatmdb({
+    apiKey: 'your-api-key',
+    timeout: 18000 /* optional, defaults to 12000 */
+}))
+
+const example = async (ctx) => {
+    await ctx.$tmdb
+        .movies()
+        .search('avatar', {year:2010})
+        .get()
+}
+
+app.use(example)
+
+app.listen(3000)
+```
+
 ### Search for movies by title
 ```js
 const movies = await tmdb

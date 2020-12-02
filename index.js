@@ -65,7 +65,7 @@ class TMDB {
         return this
     }
 
-    season(sn = []){
+    seasons(sn = []){
         if(sn.length > 0) this.state.sn = sn.length > 20 ? this._chunk(sn, 20) : [ sn ]
         if(sn.length == 0) this.state.sn = []
         return this
