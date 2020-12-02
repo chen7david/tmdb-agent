@@ -40,6 +40,11 @@ const someAsyncFunction = async () => {
         .withId('some-show-id')
 }
 ```
+### Included functionality
+
+```js
+const { koatmdb, TMDB } = require('tmdb-agent')
+```
 
 ### Search for movies by title
 ```js
