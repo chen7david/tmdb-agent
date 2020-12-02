@@ -1,19 +1,40 @@
-const config  = require('./config')
-const http = require('axios').create(config.http)
+const axios = require('axios')
+const dd = (val) => console.log(val)
 
-http.interceptors.request.use(config => {
-    config.url = encodeURI(config.url)
+/* REQUEST HANDLERS */
+const requestConfigHandler = async (config) => {
+    dd({'@NetworkFetching:': config.url})
     return config
-}, error =>{
-    console.log({'@request:': error})
-    return Promise.reject(error)
-})
+}
 
-http.interceptors.response.use(response => {
-    return response
-}, error =>{
-    console.log({'@response:': error.response})
+const requestErrorHandler = async (error) => {
+    dd({'@NetworkRequestError:': error})
     return Promise.reject(error)
-})
+}
 
-module.exports = http
+/* RESPONSE HANDLERS */
+const responseConfigHandler = async (response) => {
+    return response;
+}
+
+async function responseErrorHandler (error){
+    dd({'@NetworkResponseError:': error.message})
+    return Promise.reject(error)
+}
+
+
+module.exports = (options = {}) => {
+    
+    const config = {
+        baseURL: require('./config').url.tmdb,
+        timeout: require('./config').timeout,
+    }
+
+    Object.assign(config, options)
+    const http = axios.create(config)
+
+    http.interceptors.request.use(requestConfigHandler, requestErrorHandler)
+    http.interceptors.response.use(responseConfigHandler, responseErrorHandler)
+
+    return http
+}

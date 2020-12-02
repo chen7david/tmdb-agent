@@ -1,82 +1,102 @@
-# TMDB-Agent
+# tmdb-agent
 
 ### Usage
 ```js
 const tmdb = require('tmdb-agent')({
-    apiKey: /* you-api-key */
+    apiKey: /* your-api-key */,
+    timeout: 18000 /* optional, defaults to 12000 */
 })
 
 const someAsyncFunction = async () => {
-    const movies = await tmdb.movies().search('some-movie-name', /* optional a year parameter*/ )
-    const movie = await tmdb.movies().getById('some-movie-id')
-    const shows = await tmdb.shows().search('some-show-name')
-    const show = await tmdb.shows().getById('some-show-id')
-    const showSeasonsEpisodes = await tmdb.shows().seasons().getById('some-show-id')
-    const showSeasonsOneEpisodes = await tmdb.shows().seasons([1]).getById('some-show-id')
+    const movies = await tmdb.movies().search('some-movie-name', /* optional a year parameter*/ ).get()
+    const movie = await tmdb.movies().withId('some-movie-id').get()
+    const shows = await tmdb.shows().search('some-show-name', /* optional a year parameter*/).get()
+    const show = await tmdb.shows().withId('some-show-id').get()
+    const showSeasonsEpisodes = await tmdb.shows().seasons().withId('some-show-id')
+    const showSeasonsOneEpisodes = await tmdb.shows().seasons([1]).withId('some-show-id')
 }
 ```
 
 ### Search for movies by title
 ```js
-const movies = await tmdb.movies().search('some-movie-name', /* optional a year parameter*/ )
+const movies = await tmdb
+    .movies()
+    .search('some-movie-name', /* optional a year parameter*/ )
+    .get()
 ```
 
 ### Search for movies by MTDB id
 ```js
-const movie = await tmdb.movies().getById('some-movie-id')
+const movie = await tmdb
+    .movies()
+    .withId('some-movie-id')
+    .get()
 ```
 
 ### Search for show by title
 ```js
-const shows = await tmdb.shows().search('some-show-name')
+const shows = await tmdb
+    .shows()
+    .search('some-show-name', /* optional a year parameter*/)
+    .get()
 ```
 
 ### Search for show by MTDB id
 ```js
-const show = await tmdb.shows().getById('some-show-id')
+const show = await tmdb
+    .shows()
+    .withId('some-show-id')
+    .get()
 ```
 
 ### Search for show by MTDB id and load related season and episodes
 ```js
-const showSeasonsEpisodes = await tmdb.shows().seasons().getById('some-show-id')
+const showSeasonsEpisodes = await tmdb
+    .shows()
+    .seasons().withId('some-show-id')
+    .get()
 ```
 
 ### Search for show by MTDB id and load a subset related season and episodes
 ```js
-const showSeasonsEpisodes = await tmdb.shows().seasons([1, 20, 40]).getById('some-show-id')
+const showSeasonsEpisodes = await tmdb
+    .shows()
+    .seasons([1, 20, 40])
+    .withId('some-show-id')
+    .get()
 ```
 
 ### Get all valid genre for either shows or movies
 ```js
-const allShowGenres = await tmdb.shows().genres()
-const allMovieGenres = await tmdb.movies().genres()
+const allShowGenres = await tmdb
+    .shows()
+    .genres()
+    .get()
+const allMovieGenres = await tmdb
+    .movies()
+    .genres()
+    .get()
 ```
 
 ### Get all trending shows, movies or people
 ```js
-const allTrendingShows = await tmdb.shows().trending('week')
-const allTrendingMovies = await tmdb.movies().trending()
-const allTrendingMovies = await tmdb.people().trending()
+const allTrendingShows = await tmdb
+    .shows()
+    .trending('week')
+    .get()
+const allTrendingMovies = await tmdb
+    .movies()
+    .trending()
+    .get()
+const allTrendingMovies = await tmdb
+    .people()
+    .trending().get()
 ```
 
 ## Important URLs
 - baseURL : 'https://api.themoviedb.org/3/'
 - imageURL : 'http://image.tmdb.org/t/p/original/some-image-url'
 
-## download 
-
-```js
-const path = 'some-path/some-image-name.jpg'
-const url = 'http://some-url.com/file'
-
-const someAsyncFunc = async () => {
-
-        const result = await tmdb.download(path, url)
-        /* result is true if succees and will throw an error if fialed */ 
-}
-
-someAsyncFunc()
-```
 
 ## Important Image Sizes
 
